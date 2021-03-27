@@ -13,7 +13,7 @@ totalTime = time_cut[0] + time_cut[1]
 
 userGuess = input("Who will score the most points in the NBA today? ")
 
-if int(totalTime) < 2100:
+if int(totalTime) < 2300:
     print("NBA Games are still in progress...")
     quit()
 
