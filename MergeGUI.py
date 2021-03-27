@@ -26,9 +26,8 @@ def get_time():
 
     # Message user that NBA games have not finished playing yet
     # Compares current time to 11:00pm(When NBA games are finished)
-    if int(total_time) < 1000:
-        print("NBA data is still being collected...")
-        quit()
+    if int(total_time) < 2300:
+        return False
 
     # Change military time to normal civilian time
     if int(time_cut[0]) > 12:
@@ -46,36 +45,40 @@ def get_time():
 
 
 def find_top_scorer(user_guess):
-    # Open chrome options
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
+    if not get_time():
+        label['text'] = "You guessed " + user_guess + " to be the Top Scorer in the NBA today\nNBA data is still being collected...\nCheck back later"
 
-    # EXECUTE A CHROME GOOGLE SEARCH TO FIND THE NBA TOP SCORER
-    url = 'https://www.google.com/search?q=top+scorer+in+nba+today&source=hp&ei=U0hdYIb2G47-tAXnnr3QDA&iflsig=AINFCbYAAAAAYF1WYwDsgIPg1MPPULoPprYkOd78wvhP&oq=top+scorer+in+nba+t&gs_lcp=Cgdnd3Mtd2l6EAMYAjICCAAyAggAMgIIADIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeOggIABCxAxCDAToLCC4QsQMQxwEQowI6BQgAELEDOggILhCxAxCTAjoFCC4QsQM6DgguELEDEIMBEMcBEKMCOggILhDHARCjAjoOCC4QsQMQxwEQowIQkwI6CAguEMcBEK8BOgoIABCxAxCDARAKOhAILhCxAxDHARCvARAKEJMCOggIABCxAxDJAzoFCAAQkgM6BAgAEAo6BQgAEIYDUJOsJlj72CZgwegmaANwAHgAgAF4iAGSC5IBBDIwLjGYAQCgAQGqAQdnd3Mtd2l6sAEA&sclient=gws-wiz'
-    driver_path = 'C:\Program Files (x86)\chromedriver.exe'
-    driver = webdriver.Chrome(executable_path=driver_path, options=options)
-    driver.get(url)
+    else:
+        # Open chrome options
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
 
-    # Grab html xpath that stores the Name, Points Scored, and Date of the event
-    name_and_points = driver.find_element_by_xpath(
+        # EXECUTE A CHROME GOOGLE SEARCH TO FIND THE NBA TOP SCORER
+        url = 'https://www.google.com/search?q=top+scorer+in+nba+today&source=hp&ei=U0hdYIb2G47-tAXnnr3QDA&iflsig=AINFCbYAAAAAYF1WYwDsgIPg1MPPULoPprYkOd78wvhP&oq=top+scorer+in+nba+t&gs_lcp=Cgdnd3Mtd2l6EAMYAjICCAAyAggAMgIIADIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeOggIABCxAxCDAToLCC4QsQMQxwEQowI6BQgAELEDOggILhCxAxCTAjoFCC4QsQM6DgguELEDEIMBEMcBEKMCOggILhDHARCjAjoOCC4QsQMQxwEQowIQkwI6CAguEMcBEK8BOgoIABCxAxCDARAKOhAILhCxAxDHARCvARAKEJMCOggIABCxAxDJAzoFCAAQkgM6BAgAEAo6BQgAEIYDUJOsJlj72CZgwegmaANwAHgAgAF4iAGSC5IBBDIwLjGYAQCgAQGqAQdnd3Mtd2l6sAEA&sclient=gws-wiz'
+        driver_path = 'C:\Program Files (x86)\chromedriver.exe'
+        driver = webdriver.Chrome(executable_path=driver_path, options=options)
+        driver.get(url)
+
+        # Grab html xpath that stores the Name, Points Scored, and Date of the event
+        name_and_points = driver.find_element_by_xpath(
         '/html/body/div[8]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/div[1]/div[1]/div[3]/div/div[1]/div/div/div[1]').text
-    date_of_score = driver.find_element_by_xpath(
+        date_of_score = driver.find_element_by_xpath(
         '/html/body/div[8]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/div[1]/div[1]/div[2]/div[1]/span[3]/span').text
 
-    # Splits string into a name string and points string
-    name_split = name_and_points.split()
-    top_scorer = name_split[0] + " " + name_split[1]
-    total_points = name_split[3]
+        # Splits string into a name string and points string
+        name_split = name_and_points.split()
+        top_scorer = name_split[0] + " " + name_split[1]
+        total_points = name_split[3]
 
-    # Make statement for who the top scorer of the day was
-    top_scorer_statement = top_scorer + " was the Top Scorer in the NBA today with " + total_points + " points on " + date_of_score
+        # Make statement for who the top scorer of the day was
+        top_scorer_statement = top_scorer + " was the Top Scorer in the NBA today with " + total_points + " points on " + date_of_score
 
-    guessed_right_statement = "YOU GUESSED RIGHT! CONGRATULATIONS"
-    guessed_wrong_statement = "WHOOPS! YOU GUESSED WRONG! TRY AGAIN TOMORROW"
-    if user_guess.casefold() == top_scorer.casefold():
-        label['text'] = "You guessed " + user_guess + " to be the Top Scorer in the NBA today\n" + top_scorer_statement + "\n" + guessed_right_statement
-    else:
-        label['text'] = top_scorer_statement + "\n" + guessed_wrong_statement
+        guessed_right_statement = "CONGRATULATIONS! YOU GUESSED RIGHT!"
+        guessed_wrong_statement = "WHOOPS! You Guessed Wrong! Try Again Tomorrow!"
+        if user_guess.casefold() == top_scorer.casefold():
+            label['text'] = "You guessed " + user_guess + " to be the Top Scorer in the NBA today\n" + top_scorer_statement + "\n" + guessed_right_statement
+        else:
+            label['text'] = "You guessed " + user_guess + " to be the Top Scorer in the NBA today\n" + top_scorer_statement + "\n" + guessed_wrong_statement
 
 
 root = tk.Tk()
