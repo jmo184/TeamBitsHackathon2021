@@ -83,7 +83,7 @@ def get_time():
         day_time = "AM"
 
     result_statement = "Time played at " + str(time_hour) + ":" + time_cut[1] + day_time
-#   print(result_statement)
+    print(result_statement)
 
 
 def find_top_scorer(user_guess):
