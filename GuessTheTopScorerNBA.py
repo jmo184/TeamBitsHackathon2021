@@ -20,6 +20,7 @@ totalTime = time_cut[0] + time_cut[1]
 
 userGuess = input("Who will score the most points in the NBA today? ")
 
+
 x = totalTime
 
 today = datetime.now()
