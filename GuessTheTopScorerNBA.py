@@ -2,8 +2,15 @@
 # CHOOSE AN NBA PLAYER THAT MAY SCORE
 # THE HIGHEST AMOUNT OF POINTS TODAY
 
+
 from selenium import webdriver
 from datetime import datetime
+from os import path
+import os.path
+from datetime import datetime
+
+import time
+from tkinter import *
 
 now = datetime.now()
 time_string = now.strftime("%H %M %S")
@@ -13,9 +20,27 @@ totalTime = time_cut[0] + time_cut[1]
 
 userGuess = input("Who will score the most points in the NBA today? ")
 
-if int(totalTime) < 2300:
-    print("NBA Games are still in progress...")
-    quit()
+
+x = totalTime
+
+today = datetime.now()
+
+todaydate = datetime.today().strftime('%m-%d')
+
+name = "guessOn"+todaydate+".txt"
+
+if os.path.isfile(name):
+    print("You entered an answer for today! Using " + name)
+
+else:
+    print("Creating file...")
+    f = open(name, "w")
+    f.write(userGuess)
+
+with open(name, 'r') as file:
+    userGuess = file.read()
+
+print(userGuess)
 
 if int(time_cut[0]) > 12:
     timeHour = int(time_cut[0]) - 12
@@ -23,8 +48,8 @@ if int(time_cut[0]) > 12:
 options = webdriver.ChromeOptions()
 
 # USE FOR OPENING WINDOW #
-#options.add_experimental_option("useAutomationExtension", False)
-#options.add_experimental_option("excludeSwitches", ["enable-automation"])
+# options.add_experimental_option("useAutomationExtension", False)
+# options.add_experimental_option("excludeSwitches", ["enable-automation"])
 
 # USE FOR HIDDEN WINDOW #
 options.add_argument('headless')
@@ -36,12 +61,18 @@ driver.get('https://www.google.com/search?q=top+scorer+in+nba+today&source=hp&ei
 nameAndPoints = driver.find_element_by_xpath('/html/body/div[8]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/div[1]/div[1]/div[3]/div/div[1]/div/div/div[1]').text
 dateOfScore = driver.find_element_by_xpath('/html/body/div[8]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/div[1]/div[1]/div[2]/div[1]/span[3]/span').text
 
-#driver.close()
+# driver.close()
 
 nameSplit = nameAndPoints.split()
 
 topScorer = nameSplit[0] + " " + nameSplit[1]
-totalPoints = nameSplit[3]
+
+
+if nameSplit[3] == '·':
+    totalPoints = nameSplit[4]
+else:
+    totalPoints = nameSplit[3]
+
 
 print(topScorer + " was the Top Scorer in the NBA today with " + totalPoints + " points on " + dateOfScore)
 
