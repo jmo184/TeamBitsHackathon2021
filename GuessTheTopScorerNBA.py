@@ -6,6 +6,7 @@
 from selenium import webdriver
 from datetime import datetime
 from os import path
+import os.path
 from datetime import datetime
 
 import time
@@ -21,22 +22,24 @@ userGuess = input("Who will score the most points in the NBA today? ")
 
 x = totalTime
 
-
 today = datetime.now()
-
 
 todaydate = datetime.today().strftime('%m-%d')
 
 name = "guessOn"+todaydate+".txt"
 
+if os.path.isfile(name):
+    print("You entered an answer for today! Using " + name)
 
-f = open(name, "w")
+else:
+    print("Creating file...")
+    f = open(name, "w")
+    f.write(userGuess)
 
+with open(name, 'r') as file:
+    userGuess = file.read()
 
-f.write(userGuess)
-
-
-print(name)
+print(userGuess)
 
 if int(time_cut[0]) > 12:
     timeHour = int(time_cut[0]) - 12
@@ -52,13 +55,10 @@ options.add_argument('headless')
 
 driver_path = 'C:\Program Files (x86)\chromedriver.exe'
 driver = webdriver.Chrome(executable_path=driver_path, options=options)
-driver.get(
-    'https://www.google.com/search?q=top+scorer+in+nba+today&source=hp&ei=U0hdYIb2G47-tAXnnr3QDA&iflsig=AINFCbYAAAAAYF1WYwDsgIPg1MPPULoPprYkOd78wvhP&oq=top+scorer+in+nba+t&gs_lcp=Cgdnd3Mtd2l6EAMYAjICCAAyAggAMgIIADIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeOggIABCxAxCDAToLCC4QsQMQxwEQowI6BQgAELEDOggILhCxAxCTAjoFCC4QsQM6DgguELEDEIMBEMcBEKMCOggILhDHARCjAjoOCC4QsQMQxwEQowIQkwI6CAguEMcBEK8BOgoIABCxAxCDARAKOhAILhCxAxDHARCvARAKEJMCOggIABCxAxDJAzoFCAAQkgM6BAgAEAo6BQgAEIYDUJOsJlj72CZgwegmaANwAHgAgAF4iAGSC5IBBDIwLjGYAQCgAQGqAQdnd3Mtd2l6sAEA&sclient=gws-wiz')
+driver.get('https://www.google.com/search?q=top+scorer+in+nba+today&source=hp&ei=U0hdYIb2G47-tAXnnr3QDA&iflsig=AINFCbYAAAAAYF1WYwDsgIPg1MPPULoPprYkOd78wvhP&oq=top+scorer+in+nba+t&gs_lcp=Cgdnd3Mtd2l6EAMYAjICCAAyAggAMgIIADIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeOggIABCxAxCDAToLCC4QsQMQxwEQowI6BQgAELEDOggILhCxAxCTAjoFCC4QsQM6DgguELEDEIMBEMcBEKMCOggILhDHARCjAjoOCC4QsQMQxwEQowIQkwI6CAguEMcBEK8BOgoIABCxAxCDARAKOhAILhCxAxDHARCvARAKEJMCOggIABCxAxDJAzoFCAAQkgM6BAgAEAo6BQgAEIYDUJOsJlj72CZgwegmaANwAHgAgAF4iAGSC5IBBDIwLjGYAQCgAQGqAQdnd3Mtd2l6sAEA&sclient=gws-wiz')
 
-nameAndPoints = driver.find_element_by_xpath(
-    '/html/body/div[8]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/div[1]/div[1]/div[3]/div/div[1]/div/div/div[1]').text
-dateOfScore = driver.find_element_by_xpath(
-    '/html/body/div[8]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/div[1]/div[1]/div[2]/div[1]/span[3]/span').text
+nameAndPoints = driver.find_element_by_xpath('/html/body/div[8]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/div[1]/div[1]/div[3]/div/div[1]/div/div/div[1]').text
+dateOfScore = driver.find_element_by_xpath('/html/body/div[8]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/div[1]/div[1]/div[2]/div[1]/span[3]/span').text
 
 # driver.close()
 
