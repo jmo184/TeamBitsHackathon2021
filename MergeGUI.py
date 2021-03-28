@@ -9,10 +9,10 @@ from PIL import Image, ImageTk
 
 
 def submit_guess(guess):
-    if guess == '':
-        label['text'] = "Enter an NBA Player"
+    if guess == '':  # If user enters a blank space, ask them to submit an NBA player's name
+        label['text'] = "Please enter an NBA Player's first and last name"
     else:
-        if get_time():
+        if get_time():  # Check to see if NBA games are still in progress
             label[
                 'text'] = "You guessed " + guess + " to be the Top Scorer in the NBA today\nNBA games are in progress...\nCheck back later"
         else:
@@ -30,8 +30,8 @@ def get_time():
 
     # Message user that NBA games have not finished playing yet
     # Compares current time to 11:00pm(When NBA games are guaranteed to be finished)
-    if int(total_time) < 2300:
-        return False
+    if int(total_time) < 2100:
+        return True
 
     # Change military time to normal civilian time
     if int(time_cut[0]) > 12:
@@ -74,35 +74,42 @@ def find_top_scorer(user_guess):
     # Make statement for who the top scorer of the day was
     top_scorer_statement = top_scorer + " was the Top Scorer in the NBA today with " + total_points + " points on " + date_of_score
 
-    guessed_right_statement = "CONGRATULATIONS! YOU GUESSED RIGHT!"
-    guessed_wrong_statement = "WHOOPS! You Guessed Wrong! Try Again Tomorrow!"
+    guessed_right_statement = "CONGRATULATIONS! YOU GUESSED RIGHT!\n"
+    guessed_wrong_statement = "WHOOPS! You Guessed Wrong! Try Again Tomorrow!\n"
     if user_guess.casefold() == top_scorer.casefold():
-        label['text'] = "You guessed " + user_guess + " to be the Top Scorer in the NBA today\n" + top_scorer_statement + "\n" + guessed_right_statement
+        label['text'] = "You guessed " + user_guess + " to be the Top Scorer in the NBA today\n" + guessed_right_statement + top_scorer_statement + "\n"
     else:
-        label['text'] = "You guessed " + user_guess + " to be the Top Scorer in the NBA today\n" + top_scorer_statement + "\n" + guessed_wrong_statement
+        label['text'] = "You guessed " + user_guess + " to be the Top Scorer in the NBA today\n" + guessed_wrong_statement + top_scorer_statement + "\n"
 
 
+# Sets up GUI window
 root = tk.Tk()
 root.geometry('790x490')
 root.resizable(width=0, height=0)
 root.title('Guess The Top Scorer in the NBA Today')
 
+# Sets window background as selected image
 background_image = ImageTk.PhotoImage(Image.open('GuiBgImage.jpg'))
 background_label = tk.Label(root, image=background_image)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
+# First frame to enter and submit guess
 guess_frame = tk.Frame(root, bg='orange', bd=5)
 guess_frame.place(relx=0.5, rely=0.1, relwidth=0.75, relheight=0.1, anchor='n')
 
+# Text bar to type NBA player to guess
 entry = tk.Entry(guess_frame, font=40)
 entry.place(relx=0, rely=0, relwidth=0.65, relheight=1)
 
+# Button to submit guess and check to see if correct
 button = tk.Button(guess_frame, text='Submit Guess', font=25, command=lambda: submit_guess(entry.get()))
 button.place(relx=0.7, rely=0, relwidth=0.3, relheight=1)
 
+# Bottom frame to display messages to user
 main_frame = tk.Frame(root, bg='orange', bd=10)
 main_frame.place(relx=0.5, rely=0.25, relwidth=0.75, relheight=0.6, anchor='n')
 
+# Label from bottom frame to hold the text for all messages
 label = tk.Label(main_frame, font=('Times New Roman', 12), anchor='nw', justify='left', bd=4)
 label.place(relwidth=1, relheight=1)
 
